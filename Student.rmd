@@ -1,0 +1,100 @@
+---
+title: "Task2_Studentdata"
+author: "Bhagyashree Khabale"
+date: "09/09/2020"
+output: html_document
+---
+
+Simple Linear Regression:Predicting the Scores w.r.t. No of Hours
+
+**Step1:
+Importing Student dataset into.csv file and Check the structure of the dataset**
+
+```{r}
+Student <- read.csv("~/Student.txt")
+str(Student)
+summary(Student)
+```
+
+**Step2:
+Importing library for Regression**
+
+```{r}
+library(caTools)
+set.seed(2)
+split=sample.split(Student,SplitRatio = 0.7)
+train=subset(Student,split="True")
+test=subset(Student,split="False")
+```
+*data has been divided into two part i.e. test and train for the prediction so data split randomly with the help of set.seed command by giving a splitratio so here in this dataset 70 % data went to train set 
+and 20 % went to test set*
+
+
+**Step3:
+Creating Regression model (y=Scores,x=Hours)**
+
+```{r}
+model=lm(Scores~Hours,data = train)
+summary(model)
+```
+
+**Step4:
+Checking the Actual and predicted Score value **
+
+```{r}
+predict_result=predict(model,test)
+result=cbind(test,predict_result)
+result
+```
+
+This model gives  95% accuracy which means 5% is not predicted correctly 
+
+**Step5:
+Creating a Scatter plot to see the scatter data of Scores and Hours**
+
+#Define Dependent and Independent Variable
+
+```{r}
+library(ggplot2)
+y=Student$Scores
+x=Student$Hours
+plot(x,y,ylab = "Scores",xlab = "No.of Hours",main = "Scores vs Hours")
+```
+
+**Step6:
+Plotting Best fit line**
+
+```{r}
+library(ggplot2)
+plot(x,y,ylab = "Scores",xlab = "No.of Hours",main = "Scores vs Hours")
+abline(lm(y~x))
+```
+
+**Step7:
+Accuracy of the Model**
+
+#Calculating Sum of Error of Square
+
+```{r}
+SSE=sum((test$Scores-predict_result)^2)
+SSE
+```
+
+#calculating Total sum of square of Error
+```{r}
+SST=sum((test$Scores-mean(Student$Scores))^2)
+SST
+```
+
+#Calculating Rss value
+```{r}
+r=1-(SSE/SST)
+r
+```
+
+
+**Output**
+
+Accuracy of the Model is:**95.29%**
+
+For 9.2 hours prdicted Score will be **92.42%**
